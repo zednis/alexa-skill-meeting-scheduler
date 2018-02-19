@@ -17,28 +17,29 @@
                   "samples": []
                 },
                 {
-                    "name":"HelloWorldIntent",
-                    "slots":[
-
-                    ],
-                    "samples":[
-                        "hello",
-                        "say hello",
-                        "say hello world"
-                    ]
-                },
-                {
-                    "name":"MyNameIsIntent",
-                    "slots":[
+                    "name": "BookMeeting",
+                    "slots": [
                         {
-                            "name":"name",
-                            "type":"AMAZON.US_FIRST_NAME"
+                            "name": "room",
+                            "type": "AMAZON.NUMBER"
+                        },
+                        {
+                            "name": "duration",
+                            "type": "AMAZON.DURATION"
+                        },
+                        {
+                            "name": "time",
+                            "type": "AMAZON.TIME"
+                        },
+                        {
+                            "name": "day",
+                            "type": "AMAZON.DATE"
                         }
                     ],
-                    "samples":[
-                        "my name is {name}",
-                        "i am {name}",
-                        "you can call me {name}"
+                    "samples": [
+                        "book room {room} for {duration} at {time}",
+                        "book room {room} at {time} on {day}",
+                        "book room {room} at {time}"
                     ]
                 }
             ]
