@@ -2,5 +2,8 @@ language: node_js
 node_js:
   - "node"
 
-before_script:
+install:
   - npm install -g ask-cli
+
+before_script:
+  - cd lambda/custom
