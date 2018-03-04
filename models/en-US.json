@@ -1,48 +1,188 @@
 {
-    "interactionModel":{
-        "languageModel":{
-            "invocationName":"meeting scheduler",
-            "types":[],
-            "intents":[
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "meeting scheduler",
+            "intents": [
                 {
-                  "name": "AMAZON.CancelIntent",
-                  "samples": []
+                    "name": "AMAZON.CancelIntent",
+                    "slots": [],
+                    "samples": []
                 },
                 {
-                  "name": "AMAZON.HelpIntent",
-                  "samples": []
+                    "name": "AMAZON.HelpIntent",
+                    "slots": [],
+                    "samples": []
                 },
                 {
-                  "name": "AMAZON.StopIntent",
-                  "samples": []
+                    "name": "AMAZON.StopIntent",
+                    "slots": [],
+                    "samples": []
                 },
                 {
                     "name": "BookMeeting",
                     "slots": [
                         {
-                            "name": "room",
-                            "type": "AMAZON.NUMBER"
+                            "name": "meetingRoom",
+                            "type": "AMAZON.NUMBER",
+                            "samples": [
+                                "{meetingRoom}",
+                                "use {meetingRoom}",
+                                "room {meetingRoom}"
+                            ]
                         },
                         {
-                            "name": "duration",
-                            "type": "AMAZON.DURATION"
+                            "name": "meetingDuration",
+                            "type": "AMAZON.DURATION",
+                            "samples": [
+                                "Let's meet for {meetingDuration}",
+                                "{meetingDuration}"
+                            ]
                         },
                         {
-                            "name": "time",
-                            "type": "AMAZON.TIME"
+                            "name": "startTime",
+                            "type": "AMAZON.TIME",
+                            "samples": [
+                                "{meetingDay} at {startTime}",
+                                "{startTime} on {meetingDay}",
+                                "{startTime}",
+                                "at {startTime}"
+                            ]
                         },
                         {
-                            "name": "day",
-                            "type": "AMAZON.DATE"
+                            "name": "meetingDay",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "on {meetingDay} at {startTime}",
+                                "on {meetingDay}",
+                                "{meetingDay}"
+                            ]
                         }
                     ],
                     "samples": [
-                        "book room {room} for {duration} at {time}",
-                        "book room {room} at {time} on {day}",
-                        "book room {room} at {time}"
+                        "schedule a meeting in {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
+                        "book a meeting",
+                        "book a room",
+                        "schedule a meeting",
+                        "setup a meeting",
+                        "book room {meetingRoom} for {meetingDuration} at {startTime}",
+                        "book room {meetingRoom} at {startTime} on {meetingDay}",
+                        "book room {meetingRoom} at {startTime}"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "BookMeeting",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.661537764555"
+                    },
+                    "slots": [
+                        {
+                            "name": "meetingRoom",
+                            "type": "AMAZON.NUMBER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.661537764555.683027255892"
+                            }
+                        },
+                        {
+                            "name": "meetingDuration",
+                            "type": "AMAZON.DURATION",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.661537764555.683221292841"
+                            }
+                        },
+                        {
+                            "name": "startTime",
+                            "type": "AMAZON.TIME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.661537764555.383897879492"
+                            }
+                        },
+                        {
+                            "name": "meetingDay",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.661537764555.939357800481"
+                            }
+                        }
                     ]
                 }
             ]
-        }
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.661537764555.939357800481",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What day should I schedule the meeting?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What day do you want to meet?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.661537764555.383897879492",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "When do you want to meet?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "What time do you want to meet?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.661537764555.683221292841",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "For how long would you like to meet?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.661537764555.683027255892",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Which room should I book?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Where would you like to meet?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Which room would you like to use?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.661537764555",
+                "variations": [
+                    {
+                        "type": "SSML",
+                        "value": "<speak>I am ready to book a meeting in room {meetingRoom} on {meetingDay} at {startTime} for <say-as interpret-as='time'>{meetingDuration}</say-as>. is that OK?</speak>"
+                    }
+                ]
+            }
+        ]
     }
 }
