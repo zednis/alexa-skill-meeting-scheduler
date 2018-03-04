@@ -7,3 +7,10 @@ before_install:
 
 before_script:
   - npm install -g ask-cli
+
+before_deploy:
+  - cd ../..
+
+deploy:
+  provider: script
+  script: ask deploy
