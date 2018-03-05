@@ -38,7 +38,7 @@ page.onLoadFinished = function() {
 var steps = [
     function() {
         //Load Login Page
-        var url = "https://www.amazon.com/ap/signin?_encoding=UTF8&openid.mode=checkid_setup&openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.pape.max_auth_age=0&ie=UTF8&openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.assoc_handle=amzn_lwa_na&marketPlaceId=ATVPDKIKX0DER&arb=7e19cac3-a482-4fcf-8354-535435361fe8&language=en_US&openid.return_to=https%3A%2F%2Fwww.amazon.com%2Fap%2Foa%3FmarketPlaceId%3DATVPDKIKX0DER%26arb%3D7e19cac3-a482-4fcf-8354-535435361fe8%26language%3Den_US&enableGlobalAccountCreation=1&metricIdentifier=amzn1.application.915369ebbc1242368b3179a9cf03c32a&signedMetricIdentifier=ChhIquzflpDeAXDVrIzn02hZNf4hCPinqYBMTmva5xo%3D";
+        var url = "https://www.amazon.com/ap/oa?response_type=code&client_id=amzn1.application-oa2-client.aad322b5faab44b980c8f87f94fbac56&redirect_uri=https%3A%2F%2Fs3.amazonaws.com%2Fask-cli%2Fresponse_parser.html&scope=alexa%3A%3Aask%3Askills%3Areadwrite%20alexa%3A%3Aask%3Amodels%3Areadwrite%20alexa%3A%3Aask%3Askills%3Atest&state=Ask-SkillModel-ReadWrite";
         page.open(url);
     },
     function(email, password) {
