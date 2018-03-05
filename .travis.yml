@@ -9,10 +9,9 @@ before_deploy:
 - npm install -g ask-cli
 - npm install -g aws-sdk
 - cd ../..
-- phantomjs myPhantomTest.js | ask init -p default
 deploy:
   provider: script
-  script: echo 'Y' | ask deploy
+  script: ask deploy
   on:
     branch: aws-deployment-via-travis-ci
 env:
