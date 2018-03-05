@@ -13,7 +13,7 @@ before_deploy:
 
 deploy:
   provider: script
-  script: echo 'Y' | ask deploy
+  script: echo 'Y' | ask deploy --debug --profile default
   on:
     branch: aws-deployment-via-travis-ci
 env:
