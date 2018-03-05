@@ -1,18 +1,21 @@
 language: node_js
 node_js:
-  - "node"
-
+- node
 before_install:
-  - cd lambda/custom
-
-before_script:
-  - npm install -g ask-cli
-
+- chmod +x aws_credential_travis.sh
+- "./aws_credential_travis.sh"
+- cd lambda/custom
 before_deploy:
-  - cd ../..
-
+- npm install -g ask-cli
+- npm install -g aws-sdk
+- cd ../..
+- phantomjs myPhantomTest.js | ask init -p default
 deploy:
   provider: script
-  script: ask deploy
+  script: echo 'Y' | ask deploy
   on:
     branch: aws-deployment-via-travis-ci
+env:
+  global:
+  - secure: YX5rfuBPbwvyGTGQF0jWLzNKM/u16aX4/SHWPjajjEgWUy9sEF0DPdWsjKEf2aDl7Adk0fK270BBs0MmYSWChED1kw19OLD4NguC/eHYvlGOIMQh6WKkGTBcfxDC9z5RLFfeca/ptRrwpNh6nF9RY9t0lrYF/nnadEjnvoVOXwdf85YBhzUUeKEn8VtwTD1ul7+sNtyJl/xjtoJ4fKszgo6RlsjLRCZiXaEMn7ltmSNgMyYV978Nf/PpdZtJ+rxa2CkQx1hrwx4SwfCcx7/tzJ7NOCPq2misbsTY3O+5aFwK9CYv1z/lUQYcVEeJOvAiK/dI9c06ZvBYUYdACPzoJoP2a48zQkLJKvNQhrZtlaZHGk9DK4caeo3LtBBohR0wSPCRQ5l3RLkTEcp/5wotOwGspJZfOUI8eLMVvCBqF8zpiQMtBkrL7zeT+xaIEaI51SObedQ6nLuIhd9S5mz07cquzLs3HiJoy+HsbjdTbAjtMOlFEqZ9/nvvX07HJlVCmHyq/9GfH5nDsDHrHW5P1U+QrbWXH/Z8+ppga7h39uhbt7xPQCupV95JReU9pOaMc01J0vvtGPM/tb9C6rhuYjfHrSAOYLGiYYtviZZe3vK55lNIOJ10siKuKy9irajFksrVrYNIVFt+t8AghPxgcjX5N0rp3FBWI3nlfyKv39k=
+  - secure: XT4sSeo75KLkpcG3IMHXLp0zvMFHhh8vRPiJuhCmNlWnDcg4L11wKAt2r1dhHh3a4T96w65GvnOfZwZBvgaBSTPBW/itl4G6X5mSgStOMLnuNcfGkfjCuyGlHX1VfcPgFJNo9gakRqnW3xE9WPNjLahqhP12vpTQqougu+M/2X7II2wEvFaoggnzA6lqyn1AEPRQk6g53ktV+n3+7q/aMpgho7lkaCGaQVEpuKJKQvOrloPbsLXT4Yc2OoULCenHXi5WG225NTf+yi/Ta27ekWKc92BdQ7i0fA/BY6fpXBAfj5kcifXQyjuVgbej5jrtOg0WnnSxrDCjPEyFInQXPqoO5AAZ4G8/9gntpmTR7VCneOfvk8I1OrYDDQvgyiUTJ/axQBB92dYsXs4JcFVQ7kYOA0xojIu4HTOLr4SW291aPgRfZQLJR1hDjxMWUc8wzqQTI/CN1ZiSDr9RnjuDza5AqBZ8SawUbtZKVv9ukPvNVD5mJ0erEBqA2TbaTOOnc7Xs1AIb9+aWxN9ED22OHoUCNNBn/ksfGfs1peGVou40DxzdNC42QvhnDBD4DduXVDOSZdqHBtTkzIDrEqewTqc0yJjzFbeDQsoe6WEgNEhTRuTnmsLi3cbM+DNt0WA+n95EM9ndnbzXGJycnNQab2SxgN3jE5N6Dj7ycaT8Ofo=
