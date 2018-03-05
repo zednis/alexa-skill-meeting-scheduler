@@ -9,7 +9,7 @@ before_deploy:
 - cd ../..
 - npm install -g ask-cli
 - npm install -g aws-sdk
-- phantomjs myPhantomTest.js | ask init -p default --no-browser
+- phantomjs myPhantomTest.js | ask init -p default
 
 deploy:
   provider: script
