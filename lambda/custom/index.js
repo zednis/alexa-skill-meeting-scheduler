@@ -1,6 +1,7 @@
 'use strict';
-var Alexa = require("alexa-sdk");
-var moment = require("moment");
+const Alexa = require("alexa-sdk");
+const moment = require("moment");
+const http = require("http");
 
 exports.handler = function(event, context) {
     var alexa = Alexa.handler(event, context);
@@ -11,6 +12,8 @@ exports.handler = function(event, context) {
 
 const welcomeOutput = "Let's book a meeting.  What meeting would you like to book?";
 const welcomeReprompt = "Let me know about the meeting you would like to schedule.";
+
+const API_HOST = "meeting-scheduler.us-east-1.elasticbeanstalk.com";
 
 var handlers = {
 
@@ -26,10 +29,10 @@ var handlers = {
         const filledSlots = delegateSlotCollection.call(this);
         console.log(filledSlots);
 
-        // const roomName = this.event.request.intent.slots.meetingRoom.value;
-        // const duration = this.event.request.intent.slots.meetingDuration.value;
-        // const day = this.event.request.intent.slots.meetingDay.value;
-        // const time = this.event.request.intent.slots.startTime.value;
+        const roomName = this.event.request.intent.slots.meetingRoom.value;
+        const duration = this.event.request.intent.slots.meetingDuration.value;
+        const day = this.event.request.intent.slots.meetingDay.value;
+        const startTime = this.event.request.intent.slots.startTime.value;
 
         let msg = "";
 
@@ -37,12 +40,30 @@ var handlers = {
             msg = "Meeting request dropped.";
             // TODO should I got back to this meeting?
 
-        } else if (this.event.request.intent.confirmationStatus === "CONFIRMED") {
-            msg = "Your meeting has been booked.";
-        }
+            this.emit(':responseReady');
 
-        this.response.speak(msg).cardRenderer("Meeting Scheduler", msg);
-        this.emit(':responseReady');
+        } else if (this.event.request.intent.confirmationStatus === "CONFIRMED") {
+
+            const startDateTime = getDateTime(day, startTime);
+            const endDateTime = getEndDateTime(startDateTime, duration);
+
+            const meetingInfo = {
+                name: "test from alexa",
+                startDateTime: startDateTime.format(),
+                endDateTime: endDateTime.format()
+            };
+
+            createMeeting(meetingInfo, result => {
+                if(result) {
+                    const msg = "Your meeting has been booked.";
+                    this.response.speak(msg).cardRenderer("Meeting Scheduler", msg);
+                    this.emit(':responseReady');
+                } else {
+                    this.response.speak("There was an error contacting the backend API");
+                    this.emit(':responseReady');
+                }
+            });
+        }
     },
     'SessionEndedRequest' : function() {
         console.log('Session ended with reason: ' + this.event.request.reason);
@@ -64,7 +85,7 @@ var handlers = {
     }
 };
 
-function delegateSlotCollection(){
+function delegateSlotCollection() {
 
     console.log("in delegateSlotCollection");
     console.log("current dialogState: "+this.event.request.dialogState);
@@ -75,7 +96,7 @@ function delegateSlotCollection(){
 
         // default to meeting today
         if(!updatedIntent.slots.meetingDay.value) {
-            updatedIntent.slots.meetingDay.value = moment().utc().format("YYYY-MM-DD");
+            updatedIntent.slots.meetingDay.value = moment().format("YYYY-MM-DD");
         }
 
         // default to 1-hour meeting
@@ -97,6 +118,15 @@ function delegateSlotCollection(){
 
 const sayDate = function (date) {
     return moment(date).format('dddd');
+};
+
+const getDateTime = function(date, time) {
+    return moment(date+" "+time, "YYYY-MM-DD HH:mm")
+};
+
+const getEndDateTime = function (datetime, duration) {
+    const durationObj = getDurationObject(duration);
+    return moment(datetime).add(durationObj);
 };
 
 const sayDuration = function (duration) {
@@ -139,3 +169,70 @@ const sayDuration = function (duration) {
 
     return msg;
 };
+
+const getDurationObject = function(durationString) {
+    const days = durationString.match(/\d+D/g);
+    const hours = durationString.match(/\d+H/g);
+    const mins = durationString.match(/\d+M/g);
+    const secs = durationString.match(/\d+(.\d+)?S/g);
+
+    let obj = {};
+
+    if(days) {
+        obj["days"] = parseInt(String(days).slice(0, -1));
+    }
+
+    if(hours) {
+        obj["hours"] = parseInt(String(hours).slice(0, -1));
+    }
+
+    if(mins) {
+        obj["minutes"] = parseInt(String(mins).slice(0, -1));
+    }
+
+    if(secs) {
+        obj["seconds"] = parseFloat(String(secs).slice(0, -1));
+    }
+
+    return obj;
+};
+
+function createMeeting(data, callback) {
+
+    console.log(data);
+
+    const options = {
+        method: 'POST',
+        host: API_HOST,
+        path: '/meeting',
+        port: '80',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(JSON.stringify(data))
+        }
+    };
+
+    const req = http.request(options, res => {
+        res.setEncoding('utf8');
+
+        let returnData = "";
+
+        res.on('data', chunk => {
+            returnData += chunk;
+        });
+        res.on('end', () => {
+            const meetingURL = res.headers.location;
+            console.log('created: '+meetingURL);
+            callback(meetingURL);
+
+        });
+    });
+
+    req.on('error', (e) => {
+        console.error(e);
+        callback(false);
+    });
+
+    req.write(JSON.stringify(data));
+    req.end();
+}
