@@ -29,6 +29,7 @@ var handlers = {
         const filledSlots = delegateSlotCollection.call(this);
         console.log(filledSlots);
 
+        const meetingName = this.event.request.intent.slots.meetingName.value;
         const roomName = this.event.request.intent.slots.meetingRoom.value;
         const duration = this.event.request.intent.slots.meetingDuration.value;
         const day = this.event.request.intent.slots.meetingDay.value;
@@ -48,7 +49,7 @@ var handlers = {
             const endDateTime = getEndDateTime(startDateTime, duration);
 
             const meetingInfo = {
-                name: "test from alexa",
+                name: meetingName,
                 startDateTime: startDateTime.format(),
                 endDateTime: endDateTime.format()
             };
