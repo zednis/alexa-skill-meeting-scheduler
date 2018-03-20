@@ -87,6 +87,48 @@
                         {
                             "id": "",
                             "name": {
+                                "value": "Client Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Demo",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Webinar",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Training",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Townhall",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Interview",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
                                 "value": "Team Meeting",
                                 "synonyms": []
                             }
@@ -144,6 +186,20 @@
                             "id": "",
                             "name": {
                                 "value": "Status Update",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Sprint Review",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Sprint Planning",
                                 "synonyms": []
                             }
                         },
