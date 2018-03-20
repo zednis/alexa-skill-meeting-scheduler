@@ -56,9 +56,19 @@
                                 "on {meetingDay}",
                                 "{meetingDay}"
                             ]
+                        },
+                        {
+                            "name": "meetingName",
+                            "type": "MEETING_NAME",
+                            "samples": [
+                                "call it {meetingName}",
+                                "{meetingName}"
+                            ]
                         }
                     ],
                     "samples": [
+                        "book {meetingName} in {meetingRoom}",
+                        "schedule {meetingName} in {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
                         "schedule a meeting in {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
                         "book a meeting",
                         "book a room",
@@ -70,7 +80,118 @@
                     ]
                 }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "MEETING_NAME",
+                    "values": [
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Team Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Whiteboarding",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Brainstorming",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Review",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Status Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Stand-up",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "1-on-1",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Sync-up",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Status Update",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Iteration Review",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Iteration Planning",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Stand-up Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Container Committee Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Capstone Meeting",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Gauntlet Sprint Planning",
+                                "synonyms": []
+                            }
+                        }
+                    ]
+                }
+            ]
         },
         "dialog": {
             "intents": [
@@ -115,6 +236,15 @@
                             "elicitationRequired": true,
                             "prompts": {
                                 "elicitation": "Elicit.Slot.661537764555.939357800481"
+                            }
+                        },
+                        {
+                            "name": "meetingName",
+                            "type": "MEETING_NAME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.901578807765.989258734413"
                             }
                         }
                     ]
@@ -179,7 +309,16 @@
                 "variations": [
                     {
                         "type": "SSML",
-                        "value": "<speak>I am ready to book a meeting in room {meetingRoom} on {meetingDay} at {startTime} for <say-as interpret-as='time'>{meetingDuration}</say-as>. is that OK?</speak>"
+                        "value": "<speak>I am ready to book {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}. is that OK?</speak>"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.901578807765.989258734413",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What should I call the meeting?"
                     }
                 ]
             }
