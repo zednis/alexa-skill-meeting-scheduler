@@ -95,6 +95,7 @@ function delegateSlotCollection() {
 
         let updatedIntent = this.event.request.intent;
 
+
         // default to meeting today
         if(!updatedIntent.slots.meetingDay.value) {
             updatedIntent.slots.meetingDay.value = moment().format("YYYY-MM-DD");
@@ -105,6 +106,8 @@ function delegateSlotCollection() {
             updatedIntent.slots.meetingDuration.value = "PT1H";
         }
 
+        updatedIntent.slots.prettyDuration.value = prettifyDuration(updatedIntent.slots.meetingDuration.value);
+
         console.log(updatedIntent);
         this.emit(":delegate", updatedIntent);
 
@@ -113,6 +116,13 @@ function delegateSlotCollection() {
         this.emit(":delegate");
     } else {
         console.log("in completed");
+
+        // update prettyDuration with prettified meetingDuration value for speech back to user in meeting confirmation
+        const prettyDuration = prettifyDuration(this.event.request.intent.slots.meetingDuration.value);
+        this.event.request.intent.slots.prettyDuration.value = prettyDuration;
+
+        console.log(this.event.request.intent);
+
         return this.event.request.intent;
     }
 }
@@ -130,16 +140,14 @@ const getEndDateTime = function (datetime, duration) {
     return moment(datetime).add(durationObj);
 };
 
-const sayDuration = function (duration) {
+const prettifyDuration = function (duration) {
 
-    console.log("parsing duration " + duration);
+    const days = duration.match(/\d+D/g);
+    const hours = duration.match(/\d+H/g);
+    const mins = duration.match(/\d+M/g);
+    const secs = duration.match(/\d+(.\d+)?S/g);
 
-    var days = duration.match(/\d+D/g);
-    var hours = duration.match(/\d+H/g);
-    var mins = duration.match(/\d+M/g);
-    var secs = duration.match(/\d+(.\d+)?S/g);
-
-    var msg = "";
+    let msg = "";
 
     if (days) {
         const _days = parseInt(String(days).slice(0, -1));
