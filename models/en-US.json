@@ -27,14 +27,17 @@
                             "samples": [
                                 "{meetingRoom}",
                                 "use {meetingRoom}",
-                                "room {meetingRoom}"
+                                "room {meetingRoom}",
+                                "book room {meetingRoom} at {startTime}",
+                                "schedule room {meetingRoom} at {startTime} for {meetingDuration}"
                             ]
                         },
                         {
                             "name": "meetingDuration",
                             "type": "AMAZON.DURATION",
                             "samples": [
-                                "Let's meet for {meetingDuration}",
+                                "let's meet for {meetingDuration}",
+                                "for {meetingDuration}",
                                 "{meetingDuration}"
                             ]
                         },
@@ -42,6 +45,7 @@
                             "name": "startTime",
                             "type": "AMAZON.TIME",
                             "samples": [
+                                "{startTime} for {meetingDuration}",
                                 "{meetingDay} at {startTime}",
                                 "{startTime} on {meetingDay}",
                                 "{startTime}",
@@ -52,6 +56,7 @@
                             "name": "meetingDay",
                             "type": "AMAZON.DATE",
                             "samples": [
+                                "on {meetingDay} at {startTime} for {meetingDuration}",
                                 "on {meetingDay} at {startTime}",
                                 "on {meetingDay}",
                                 "{meetingDay}"
@@ -64,12 +69,21 @@
                                 "call it {meetingName}",
                                 "{meetingName}"
                             ]
+                        },
+                        {
+                            "name": "prettyDuration",
+                            "type": "PRETTY_DURATION"
                         }
                     ],
                     "samples": [
-                        "book {meetingName} in {meetingRoom}",
-                        "schedule {meetingName} in {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
-                        "schedule a meeting in {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
+                        "book {meetingName} in room {meetingRoom}",
+                        "schedule {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
+                        "book {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
+                        "schedule {meetingName} in room {meetingRoom} at {startTime} for {meetingDuration}",
+                        "schedule {meetingName} in room {meetingRoom} at {startTime}",
+                        "schedule a meeting in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
+                        "schedule {meetingName} at {startTime}",
+                        "schedule {meetingName} at {startTime} for {meetingDuration}",
                         "book a meeting",
                         "book a room",
                         "schedule a meeting",
@@ -81,6 +95,53 @@
                 }
             ],
             "types": [
+                {
+                  "name": "PRETTY_DURATION",
+                    "values": [
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "1 hour",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "2 hours",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "1 hour and 30 minutes",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "30 minutes",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "50 minutes",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "25 minutes",
+                                "synonyms": []
+                            }
+                        }
+                    ]
+                },
                 {
                     "name": "MEETING_NAME",
                     "values": [
@@ -302,6 +363,12 @@
                             "prompts": {
                                 "elicitation": "Elicit.Slot.901578807765.989258734413"
                             }
+                        },
+                        {
+                            "name": "prettyDuration",
+                            "type": "PRETTY_DURATION",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false
                         }
                     ]
                 }
@@ -365,7 +432,7 @@
                 "variations": [
                     {
                         "type": "SSML",
-                        "value": "<speak>I am ready to book {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}. is that OK?</speak>"
+                        "value": "<speak>I am ready to book {meetingName} in room {meetingRoom} on <say-as interpret-as=\"date\">{meetingDay}</say-as> at {startTime} for {prettyDuration}. is that OK?</speak>"
                     }
                 ]
             },
