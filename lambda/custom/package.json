@@ -6,7 +6,9 @@
     "test": "echo \"no test specified\" && exit 0"
   },
   "dependencies": {
-    "alexa-sdk": "^1.0.0",
-    "moment": "^2.21.0"
+    "alexa-sdk": "^1.0.25",
+    "moment": "^2.21.0",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
   }
 }

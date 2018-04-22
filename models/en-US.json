@@ -23,7 +23,7 @@
                     "slots": [
                         {
                             "name": "meetingRoom",
-                            "type": "AMAZON.NUMBER",
+                            "type": "ROOM_NAME",
                             "samples": [
                                 "{meetingRoom}",
                                 "use {meetingRoom}",
@@ -307,6 +307,72 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "MEETING_RESOURCE",
+                    "values": [
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "projector",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "whiteboard",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "telepresence",
+                                "synonyms": []
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "ROOM_NAME",
+                    "values": [
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Pikes Peak",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "Longs Peak",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "42",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "69",
+                                "synonyms": []
+                            }
+                        },
+                        {
+                            "id": "",
+                            "name": {
+                                "value": "142",
+                                "synonyms": []
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -321,7 +387,7 @@
                     "slots": [
                         {
                             "name": "meetingRoom",
-                            "type": "AMAZON.NUMBER",
+                            "type": "ROOM_NAME",
                             "confirmationRequired": false,
                             "elicitationRequired": true,
                             "prompts": {
