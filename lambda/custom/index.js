@@ -37,6 +37,8 @@ var handlers = {
         const day = this.event.request.intent.slots.meetingDay.value;
         const startTime = this.event.request.intent.slots.startTime.value;
 
+        const organizerEmail = this.event.request.intent.slots.organizerEmail.value;
+
         let msg = "";
 
         if(this.event.request.intent.confirmationStatus === "DENIED") {
@@ -51,14 +53,16 @@ var handlers = {
             const startDateTime = getDateTime(day, startTime);
             const endDateTime = getEndDateTime(startDateTime, duration);
 
+            console.log("organizer: ", organizer);
+            console.log("room: ", roomName);
+
             const meetingInfo = {
                 name: meetingName,
                 startDateTime: startDateTime.format(),
                 endDateTime: endDateTime.format(),
-                participants: ["zednis@rpi.edu"],
+                participants: [organizerEmail],
                 room: "Pikes Peak"
             };
-
 
             request.post({
                 method: 'POST',
@@ -121,16 +125,46 @@ function delegateSlotCollection() {
 
     } else if(this.event.request.dialogState !== "COMPLETED") {
         console.log("in not completed");
-        this.emit(":delegate");
+        console.log(this.event.request.intent.slots);
+
+        let updatedIntent = this.event.request.intent;
+
+        const organizerSlot = updatedIntent.slots.organizer;
+        if(organizerSlot.value && organizerSlot.confirmationStatus === "NONE") {
+
+            request.get({
+                method: 'GET',
+                uri: API_BASE+"/api/users",
+                qs: {
+                    givenName: organizerSlot.value
+                },
+                json: true
+            }, (error, response, body) => {
+
+                if(response.statusCode === 200 && body.items.length > 0) {
+                    updatedIntent.slots.organizer.value = body.items[0].givenName + " " + body.items[0].familyName;
+                    updatedIntent.slots.organizerEmail.value = body.items[0].email;
+                } else {
+                    updatedIntent.slots.organizerEmail.value = "unknown";
+                }
+
+                this.emit(":delegate", updatedIntent);
+
+            });
+
+        } else {
+            this.emit(":delegate");
+        }
+
     } else {
         console.log("in completed");
 
-        // update prettyDuration with prettified meetingDuration value for speech back to user in meeting confirmation
-        const prettyDuration = prettifyDuration(this.event.request.intent.slots.meetingDuration.value);
-        this.event.request.intent.slots.prettyDuration.value = prettyDuration;
+        let updatedIntent = this.event.request.intent;
 
-        console.log("foo", this.event.request.intent);
-        return this.event.request.intent;
+        // update prettyDuration with prettified meetingDuration value for speech back to user in meeting confirmation
+        const prettyDuration = prettifyDuration(updatedIntent.slots.meetingDuration.value);
+        updatedIntent.slots.prettyDuration.value = prettyDuration;
+        return updatedIntent;
     }
 }
 
