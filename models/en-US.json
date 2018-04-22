@@ -5,17 +5,14 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "slots": [],
                     "samples": []
                 },
                 {
                     "name": "AMAZON.HelpIntent",
-                    "slots": [],
                     "samples": []
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "slots": [],
                     "samples": []
                 },
                 {
@@ -73,10 +70,24 @@
                         {
                             "name": "prettyDuration",
                             "type": "PRETTY_DURATION"
+                        },
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "samples": [
+                                "set {organizer} as organizer",
+                                "{organizer}"
+                            ]
+                        },
+                        {
+                            "name": "organizerEmail",
+                            "type": "USER"
                         }
                     ],
                     "samples": [
-                        "book {meetingName} in room {meetingRoom}",
+                        "{organizer} would like to book a meeting",
+                        "book {meetingName} with {organizer} as organizer",
+                        "book {meetingName} in room {meetingRoom} with {organizer} as organizer",
                         "schedule {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
                         "book {meetingName} in room {meetingRoom} on {meetingDay} at {startTime} for {meetingDuration}",
                         "schedule {meetingName} in room {meetingRoom} at {startTime} for {meetingDuration}",
@@ -96,48 +107,36 @@
             ],
             "types": [
                 {
-                  "name": "PRETTY_DURATION",
+                    "name": "PRETTY_DURATION",
                     "values": [
                         {
-                            "id": "",
                             "name": {
-                                "value": "1 hour",
-                                "synonyms": []
+                                "value": "1 hour"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "2 hours",
-                                "synonyms": []
+                                "value": "2 hours"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "1 hour and 30 minutes",
-                                "synonyms": []
+                                "value": "1 hour and 30 minutes"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "30 minutes",
-                                "synonyms": []
+                                "value": "30 minutes"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "50 minutes",
-                                "synonyms": []
+                                "value": "50 minutes"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "25 minutes",
-                                "synonyms": []
+                                "value": "25 minutes"
                             }
                         }
                     ]
@@ -146,164 +145,118 @@
                     "name": "MEETING_NAME",
                     "values": [
                         {
-                            "id": "",
                             "name": {
-                                "value": "Client Meeting",
-                                "synonyms": []
+                                "value": "Client Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Demo",
-                                "synonyms": []
+                                "value": "Demo"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Webinar",
-                                "synonyms": []
+                                "value": "Webinar"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Training",
-                                "synonyms": []
+                                "value": "Training"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Townhall",
-                                "synonyms": []
+                                "value": "Townhall"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Interview",
-                                "synonyms": []
+                                "value": "Interview"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Team Meeting",
-                                "synonyms": []
+                                "value": "Team Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Whiteboarding",
-                                "synonyms": []
+                                "value": "Whiteboarding"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Brainstorming",
-                                "synonyms": []
+                                "value": "Brainstorming"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Review",
-                                "synonyms": []
+                                "value": "Review"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Status Meeting",
-                                "synonyms": []
+                                "value": "Status Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Stand-up",
-                                "synonyms": []
+                                "value": "Stand-up"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "1-on-1",
-                                "synonyms": []
+                                "value": "1-on-1"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Sync-up",
-                                "synonyms": []
+                                "value": "Sync-up"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Status Update",
-                                "synonyms": []
+                                "value": "Status Update"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Sprint Review",
-                                "synonyms": []
+                                "value": "Sprint Review"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Sprint Planning",
-                                "synonyms": []
+                                "value": "Sprint Planning"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Iteration Review",
-                                "synonyms": []
+                                "value": "Iteration Review"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Iteration Planning",
-                                "synonyms": []
+                                "value": "Iteration Planning"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Stand-up Meeting",
-                                "synonyms": []
+                                "value": "Stand-up Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Container Committee Meeting",
-                                "synonyms": []
+                                "value": "Container Committee Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Capstone Meeting",
-                                "synonyms": []
+                                "value": "Capstone Meeting"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Gauntlet Sprint Planning",
-                                "synonyms": []
+                                "value": "Gauntlet Sprint Planning"
                             }
                         }
                     ]
@@ -312,24 +265,18 @@
                     "name": "MEETING_RESOURCE",
                     "values": [
                         {
-                            "id": "",
                             "name": {
-                                "value": "projector",
-                                "synonyms": []
+                                "value": "projector"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "whiteboard",
-                                "synonyms": []
+                                "value": "whiteboard"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "telepresence",
-                                "synonyms": []
+                                "value": "telepresence"
                             }
                         }
                     ]
@@ -338,38 +285,105 @@
                     "name": "ROOM_NAME",
                     "values": [
                         {
-                            "id": "",
                             "name": {
-                                "value": "Pikes Peak",
-                                "synonyms": []
+                                "value": "Pikes Peak"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "Longs Peak",
-                                "synonyms": []
+                                "value": "Longs Peak"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "42",
-                                "synonyms": []
+                                "value": "42"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "69",
-                                "synonyms": []
+                                "value": "69"
                             }
                         },
                         {
-                            "id": "",
                             "name": {
-                                "value": "142",
-                                "synonyms": []
+                                "value": "142"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "USER",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "osmano@rpi.edu",
+                                "synonyms": [
+                                    "Omer Osman",
+                                    "Omer"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "pings@rpi.edu",
+                                "synonyms": [
+                                    "Sunyi Ping",
+                                    "Sunyi"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "vachhr@rpi.edu",
+                                "synonyms": [
+                                    "Roshni Vachhani",
+                                    "Roshni"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "devin.hurley@ge.com",
+                                "synonyms": [
+                                    "Devin Hurley",
+                                    "Devin"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sarah.hoch@ge.com",
+                                "synonyms": [
+                                    "Sarah Hoch",
+                                    "Sarah"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ivan.fugloe@ge.com",
+                                "synonyms": [
+                                    "Ivan Fugloe",
+                                    "Ivan"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "wangm13@rpi.edu",
+                                "synonyms": [
+                                    "Max Wang",
+                                    "Max"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "zednis@rpi.edu",
+                                "synonyms": [
+                                    "Stephan Zednik",
+                                    "Stephan"
+                                ]
                             }
                         }
                     ]
@@ -434,7 +448,25 @@
                             "name": "prettyDuration",
                             "type": "PRETTY_DURATION",
                             "confirmationRequired": false,
-                            "elicitationRequired": false
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "confirmationRequired": true,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "confirmation": "Confirm.Slot.292336693360.120453077984",
+                                "elicitation": "Elicit.Slot.337636808919.617715366740"
+                            }
+                        },
+                        {
+                            "name": "organizerEmail",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
                         }
                     ]
                 }
@@ -498,7 +530,7 @@
                 "variations": [
                     {
                         "type": "SSML",
-                        "value": "<speak>I am ready to book {meetingName} in room {meetingRoom} on <say-as interpret-as=\"date\">{meetingDay}</say-as> at {startTime} for {prettyDuration}. is that OK?</speak>"
+                        "value": "<speak>I am ready to book {meetingName} in room {meetingRoom} on <say-as interpret-as=\"date\">{meetingDay}</say-as> at {startTime} for {prettyDuration} with {organizer} as organizer.  Is that OK</speak>"
                     }
                 ]
             },
@@ -508,6 +540,24 @@
                     {
                         "type": "PlainText",
                         "value": "What should I call the meeting?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.337636808919.617715366740",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who should I set as the meeting organizer?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.292336693360.120453077984",
+                "variations": [
+                    {
+                        "type": "SSML",
+                        "value": "<speak>Did you mean {organizer} with email <say-as interpret-as=\"characters\">{organizerEmail}</say-as></speak>"
                     }
                 ]
             }
