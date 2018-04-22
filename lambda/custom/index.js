@@ -1,7 +1,7 @@
 'use strict';
 const Alexa = require("alexa-sdk");
 const moment = require("moment");
-const http = require("http");
+const request = require('request');
 
 exports.handler = function(event, context) {
     var alexa = Alexa.handler(event, context);
@@ -14,6 +14,7 @@ const welcomeOutput = "Let's book a meeting.  What meeting would you like to boo
 const welcomeReprompt = "Let me know about the meeting you would like to schedule.";
 
 const API_HOST = "meeting-scheduler.us-east-1.elasticbeanstalk.com";
+const API_BASE = "http://"+API_HOST;
 
 var handlers = {
 
@@ -22,12 +23,13 @@ var handlers = {
         this.response.speak(welcomeOutput).listen(welcomeReprompt);
         this.emit(':responseReady');
     },
+
     'BookMeeting': function () {
 
         console.log("in BookMeeting");
 
         const filledSlots = delegateSlotCollection.call(this);
-        console.log(filledSlots);
+        console.log("bar", filledSlots);
 
         const meetingName = this.event.request.intent.slots.meetingName.value;
         const roomName = this.event.request.intent.slots.meetingRoom.value;
@@ -45,24 +47,30 @@ var handlers = {
 
         } else if (this.event.request.intent.confirmationStatus === "CONFIRMED") {
 
+            console.log("confirmed, calling API");
             const startDateTime = getDateTime(day, startTime);
             const endDateTime = getEndDateTime(startDateTime, duration);
 
             const meetingInfo = {
                 name: meetingName,
                 startDateTime: startDateTime.format(),
-                endDateTime: endDateTime.format()
+                endDateTime: endDateTime.format(),
+                participants: ["zednis@rpi.edu"],
+                room: "Pikes Peak"
             };
 
-            createMeeting(meetingInfo, result => {
-                if(result) {
-                    const msg = "Your meeting has been booked.";
-                    this.response.speak(msg).cardRenderer("Meeting Scheduler", msg);
-                    this.emit(':responseReady');
-                } else {
-                    this.response.speak("There was an error contacting the backend API");
-                    this.emit(':responseReady');
-                }
+
+            request.post({
+                method: 'POST',
+                uri: API_BASE+"/api/meetings",
+                body: meetingInfo,
+                json: true
+            }, (error, response, body) => {
+                console.log(response);
+                console.log("created: ", body.created);
+                const msg = "Your meeting has been booked.";
+                this.response.speak(msg).cardRenderer("Meeting Scheduler", msg);
+                this.emit(':responseReady');
             });
         }
     },
@@ -121,8 +129,7 @@ function delegateSlotCollection() {
         const prettyDuration = prettifyDuration(this.event.request.intent.slots.meetingDuration.value);
         this.event.request.intent.slots.prettyDuration.value = prettyDuration;
 
-        console.log(this.event.request.intent);
-
+        console.log("foo", this.event.request.intent);
         return this.event.request.intent;
     }
 }
@@ -205,43 +212,3 @@ const getDurationObject = function(durationString) {
 
     return obj;
 };
-
-function createMeeting(data, callback) {
-
-    console.log(data);
-
-    const options = {
-        method: 'POST',
-        host: API_HOST,
-        path: '/meeting',
-        port: '80',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(JSON.stringify(data))
-        }
-    };
-
-    const req = http.request(options, res => {
-        res.setEncoding('utf8');
-
-        let returnData = "";
-
-        res.on('data', chunk => {
-            returnData += chunk;
-        });
-        res.on('end', () => {
-            const meetingURL = res.headers.location;
-            console.log('created: '+meetingURL);
-            callback(meetingURL);
-
-        });
-    });
-
-    req.on('error', (e) => {
-        console.error(e);
-        callback(false);
-    });
-
-    req.write(JSON.stringify(data));
-    req.end();
-}
