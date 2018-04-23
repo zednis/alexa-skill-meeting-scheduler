@@ -19,6 +19,30 @@
                     "name": "BookMeeting",
                     "slots": [
                         {
+                            "name": "meetingName",
+                            "type": "MEETING_NAME",
+                            "samples": [
+                                "call it {meetingName}",
+                                "{meetingName}"
+                            ]
+                        },
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "samples": [
+                                "set {organizer} as organizer",
+                                "{organizer}"
+                            ]
+                        },
+                        {
+                            "name": "participant",
+                            "type": "USER",
+                            "samples": [
+                                "include {participant}",
+                                "add {participant}"
+                            ]
+                        },
+                        {
                             "name": "meetingRoom",
                             "type": "ROOM_NAME",
                             "samples": [
@@ -60,31 +84,24 @@
                             ]
                         },
                         {
-                            "name": "meetingName",
-                            "type": "MEETING_NAME",
-                            "samples": [
-                                "call it {meetingName}",
-                                "{meetingName}"
-                            ]
-                        },
-                        {
                             "name": "prettyDuration",
                             "type": "PRETTY_DURATION"
                         },
                         {
-                            "name": "organizer",
-                            "type": "USER",
-                            "samples": [
-                                "set {organizer} as organizer",
-                                "{organizer}"
-                            ]
-                        },
-                        {
                             "name": "organizerEmail",
                             "type": "USER"
+                        },
+                        {
+                            "name": "participantEmail",
+                            "type": "USER"
+                        },
+                        {
+                            "name": "addParticipant",
+                            "type": "YES_NO"
                         }
                     ],
                     "samples": [
+                        "book {meetingName} with {participant}",
                         "{organizer} would like to book a meeting",
                         "book {meetingName} with {organizer} as organizer",
                         "book {meetingName} in room {meetingRoom} with {organizer} as organizer",
@@ -316,6 +333,11 @@
                     "values": [
                         {
                             "name": {
+                                "value": "done"
+                            }
+                        },
+                        {
+                            "name": {
                                 "value": "osmano@rpi.edu",
                                 "synonyms": [
                                     "Omer Osman",
@@ -387,6 +409,21 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "YES_NO",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "No"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Yes"
+                            }
+                        }
+                    ]
                 }
             ]
         },
@@ -399,6 +436,35 @@
                         "confirmation": "Confirm.Intent.661537764555"
                     },
                     "slots": [
+                        {
+                            "name": "meetingName",
+                            "type": "MEETING_NAME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.901578807765.989258734413"
+                            }
+                        },
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "confirmationRequired": true,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "confirmation": "Confirm.Slot.292336693360.120453077984",
+                                "elicitation": "Elicit.Slot.337636808919.617715366740"
+                            }
+                        },
+                        {
+                            "name": "participant",
+                            "type": "USER",
+                            "confirmationRequired": true,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "confirmation": "Confirm.Slot.56557789669.433818892582",
+                                "elicitation": "Elicit.Slot.56557789669.433818892582"
+                            }
+                        },
                         {
                             "name": "meetingRoom",
                             "type": "ROOM_NAME",
@@ -436,15 +502,6 @@
                             }
                         },
                         {
-                            "name": "meetingName",
-                            "type": "MEETING_NAME",
-                            "confirmationRequired": false,
-                            "elicitationRequired": true,
-                            "prompts": {
-                                "elicitation": "Elicit.Slot.901578807765.989258734413"
-                            }
-                        },
-                        {
                             "name": "prettyDuration",
                             "type": "PRETTY_DURATION",
                             "confirmationRequired": false,
@@ -452,18 +509,22 @@
                             "prompts": {}
                         },
                         {
-                            "name": "organizer",
-                            "type": "USER",
-                            "confirmationRequired": true,
-                            "elicitationRequired": true,
-                            "prompts": {
-                                "confirmation": "Confirm.Slot.292336693360.120453077984",
-                                "elicitation": "Elicit.Slot.337636808919.617715366740"
-                            }
-                        },
-                        {
                             "name": "organizerEmail",
                             "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "participantEmail",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "addParticipant",
+                            "type": "YES_NO",
                             "confirmationRequired": false,
                             "elicitationRequired": false,
                             "prompts": {}
@@ -558,6 +619,42 @@
                     {
                         "type": "SSML",
                         "value": "<speak>Did you mean {organizer} with email <say-as interpret-as=\"characters\">{organizerEmail}</say-as></speak>"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.56557789669.388062887781",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Would you like to add any more participants to the meeting?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.56557789669.715708186637",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who else would you like to add to the meeting?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.56557789669.433818892582",
+                "variations": [
+                    {
+                        "type": "SSML",
+                        "value": "<speak>Did you mean {participant} with email <say-as interpret-as=\"characters\">{participantEmail}</say-as></speak>"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.56557789669.433818892582",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who would you like to add to the meeting?"
                     }
                 ]
             }

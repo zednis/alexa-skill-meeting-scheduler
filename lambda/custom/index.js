@@ -16,6 +16,12 @@ const welcomeReprompt = "Let me know about the meeting you would like to schedul
 const API_HOST = "meeting-scheduler.us-east-1.elasticbeanstalk.com";
 const API_BASE = "http://"+API_HOST;
 
+const participants = [];
+
+let assignedOrganizer = false;
+let doneWithParticipants = false;
+let invitingParticipant = false;
+
 var handlers = {
 
     'LaunchRequest': function () {
@@ -38,6 +44,7 @@ var handlers = {
         const startTime = this.event.request.intent.slots.startTime.value;
 
         const organizerEmail = this.event.request.intent.slots.organizerEmail.value;
+        // const participantEmail = this.event.request.intent.slots.participantEmail.value;
 
         let msg = "";
 
@@ -53,14 +60,18 @@ var handlers = {
             const startDateTime = getDateTime(day, startTime);
             const endDateTime = getEndDateTime(startDateTime, duration);
 
-            console.log("organizer: ", organizer);
+            console.log("organizer: ", organizerEmail);
+            // console.log("participants: ", participantEmail);
             console.log("room: ", roomName);
+            console.log("participants array: ", participants);
+
+            const users = [organizerEmail].concat(participants);
 
             const meetingInfo = {
                 name: meetingName,
                 startDateTime: startDateTime.format(),
                 endDateTime: endDateTime.format(),
-                participants: [organizerEmail],
+                participants: users,
                 room: "Pikes Peak"
             };
 
@@ -107,6 +118,9 @@ function delegateSlotCollection() {
 
         let updatedIntent = this.event.request.intent;
 
+        if(!updatedIntent.slots.participant.value) {
+            updatedIntent.slots.participant.value = "";
+        }
 
         // default to meeting today
         if(!updatedIntent.slots.meetingDay.value) {
@@ -124,13 +138,89 @@ function delegateSlotCollection() {
         this.emit(":delegate", updatedIntent);
 
     } else if(this.event.request.dialogState !== "COMPLETED") {
-        console.log("in not completed");
+
+        console.log("NOT COMPLETED");
         console.log(this.event.request.intent.slots);
 
         let updatedIntent = this.event.request.intent;
-
         const organizerSlot = updatedIntent.slots.organizer;
-        if(organizerSlot.value && organizerSlot.confirmationStatus === "NONE") {
+        const participantSlot = updatedIntent.slots.participant;
+        const participantEmail = updatedIntent.slots.participantEmail;
+        const addParticipant = updatedIntent.slots.addParticipant;
+
+        if(participantSlot.value
+            && doneWithParticipants === false
+            && invitingParticipant === true
+            && participantSlot.value !== ""
+            && participantSlot.confirmationStatus === "CONFIRMED") {
+
+            participants.push(participantEmail.value);
+            participantSlot.value = "";
+            invitingParticipant = false;
+
+            let prompt = "Would you like to invite anyone else to the meeting?";
+            let reprompt = "Would you like to invite anyone else to the meeting?";
+            this.emit(':elicitSlot', 'addParticipant', prompt, reprompt);
+
+        } else if(addParticipant.value
+            && invitingParticipant === false
+            && doneWithParticipants === false) {
+
+            if(addParticipant.value
+                && addParticipant.value.toLowerCase() === "yes") {
+                invitingParticipant = true;
+                let prompt = "Who would you like to invite?";
+                let reprompt = "Who else would you like to invite to the meeting?";
+                this.emit(':elicitSlot', 'participant', prompt, reprompt);
+
+            } else {
+                doneWithParticipants = true;
+                this.emit(":delegate", updatedIntent);
+            }
+
+        } else if(participantSlot.value
+            && doneWithParticipants === false
+            && invitingParticipant === true
+            && participantSlot.confirmationStatus === "NONE") {
+
+            request.get({
+                method: 'GET',
+                uri: API_BASE + "/api/users",
+                qs: {
+                    givenName: participantSlot.value
+                },
+                json: true
+            }, (error, response, body) => {
+
+                if (response.statusCode === 200 && body.items.length > 0) {
+                    updatedIntent.slots.participant.value = body.items[0].givenName + " " + body.items[0].familyName;
+                    updatedIntent.slots.participantEmail.value = body.items[0].email;
+
+                } else {
+                    updatedIntent.slots.participantEmail.value = "unknown";
+                }
+
+                this.emit(":delegate", updatedIntent);
+
+            });
+
+        } else if(organizerSlot.value
+            && assignedOrganizer === false
+            && organizerSlot.confirmationStatus === "CONFIRMED") {
+
+            // set to null so dialog will ask user if they want to include participants
+            participantSlot.value = null;
+
+            assignedOrganizer = true;
+            invitingParticipant = false;
+
+            //this.emit(":delegate", updatedIntent);
+            let prompt = "Would you like to invite anyone else to the meeting?";
+            let reprompt = "Would you like to invite anyone else to the meeting?";
+            this.emit(':elicitSlot', 'addParticipant', prompt, reprompt);
+
+        } else if(organizerSlot.value
+            && organizerSlot.confirmationStatus === "NONE") {
 
             request.get({
                 method: 'GET',
