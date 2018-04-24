@@ -147,6 +147,7 @@ function delegateSlotCollection() {
         const participantSlot = updatedIntent.slots.participant;
         const participantEmail = updatedIntent.slots.participantEmail;
         const addParticipant = updatedIntent.slots.addParticipant;
+        const meetingRoomSlot = updatedIntent.slots.meetingRoom;
 
         if(participantSlot.value
             && doneWithParticipants === false
@@ -166,7 +167,7 @@ function delegateSlotCollection() {
             && invitingParticipant === false
             && doneWithParticipants === false) {
 
-            if(addParticipant.value
+            if (addParticipant.value
                 && addParticipant.value.toLowerCase() === "yes") {
                 invitingParticipant = true;
                 let prompt = "Who would you like to invite?";
@@ -177,6 +178,27 @@ function delegateSlotCollection() {
                 doneWithParticipants = true;
                 this.emit(":delegate", updatedIntent);
             }
+
+        } else if(meetingRoomSlot.value && meetingRoomSlot.confirmationStatus === "NONE") {
+
+            request.get({
+                method: 'GET',
+                uri: API_BASE + "/api/rooms",
+                qs: {
+                    nameContains: meetingRoomSlot.value
+                },
+                json: true
+            }, (error, response, body) => {
+
+                if (response.statusCode === 200 && body.items.length > 0) {
+                    meetingRoomSlot.value = body.items[0].name;
+                } else {
+                    meetingRoomSlot.value = null;
+                }
+
+                this.emit(":delegate", updatedIntent);
+
+            });
 
         } else if(participantSlot.value
             && doneWithParticipants === false
