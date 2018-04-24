@@ -468,9 +468,10 @@
                         {
                             "name": "meetingRoom",
                             "type": "ROOM_NAME",
-                            "confirmationRequired": false,
+                            "confirmationRequired": true,
                             "elicitationRequired": true,
                             "prompts": {
+                                "confirmation": "Confirm.Slot.1195479810913.1303106738202",
                                 "elicitation": "Elicit.Slot.661537764555.683027255892"
                             }
                         },
@@ -655,6 +656,15 @@
                     {
                         "type": "PlainText",
                         "value": "Who would you like to add to the meeting?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.1195479810913.1303106738202",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Did you mean {meetingRoom}"
                     }
                 ]
             }
