@@ -347,7 +347,7 @@ const getEndDateTime = function (datetime, duration) {
 };
 
 const prettifyDateTime = function (datetime) {
-    return moment(datetime).format("ddd, Hma");
+    return moment(datetime).format("dddd, Hma");
 };
 
 const prettifyDuration = function (duration) {
