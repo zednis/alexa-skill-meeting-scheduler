@@ -21,6 +21,8 @@ const participants = [];
 let assignedOrganizer = false;
 let doneWithParticipants = false;
 let invitingParticipant = false;
+let awaitingResponseOnSuggestingMeetingTimes = false;
+let roomSuggestions = [];
 
 var handlers = {
 
@@ -72,7 +74,7 @@ var handlers = {
                 startDateTime: startDateTime.format(),
                 endDateTime: endDateTime.format(),
                 participants: users,
-                room: "Pikes Peak"
+                room: roomName
             };
 
             request.post({
@@ -147,6 +149,7 @@ function delegateSlotCollection() {
         const participantSlot = updatedIntent.slots.participant;
         const participantEmail = updatedIntent.slots.participantEmail;
         const addParticipant = updatedIntent.slots.addParticipant;
+        const suggestMeetingTime = updatedIntent.slots.suggestMeetingTime;
         const meetingRoomSlot = updatedIntent.slots.meetingRoom;
 
         if(participantSlot.value
@@ -163,6 +166,52 @@ function delegateSlotCollection() {
             let reprompt = "Would you like to invite anyone else to the meeting?";
             this.emit(':elicitSlot', 'addParticipant', prompt, reprompt);
 
+        } else if(suggestMeetingTime.value
+            && awaitingResponseOnSuggestingMeetingTimes === true) {
+
+            awaitingResponseOnSuggestingMeetingTimes = false;
+
+            if(suggestMeetingTime.value.toLowerCase() === "yes") {
+
+                const organizerEmail = updatedIntent.slots.organizerEmail.value;
+                const users = [organizerEmail].concat(participants);
+
+                request.post({
+                    method: 'POST',
+                    uri: API_BASE + "/api/meetingSuggestion",
+                    body: {participants: users},
+                    json: true
+                }, (error, response, body) => {
+
+                    if (response.statusCode === 200 && body.suggestions.length > 0) {
+                        roomSuggestions = body.suggestions;
+
+                        // TODO read off meeting time suggestions ... listen for response
+
+                        const startTimeOptions = roomSuggestions.map(s => prettifyDateTime(s.startDateTime));
+
+                        const msg = sayArray(startTimeOptions, 'or');
+                        let prompt = "Would you like to meet at "+msg;
+                        let reprompt = "Would you like to meet at "+msg;
+                        this.emit(':elicitSlot', 'startTime', prompt, reprompt);
+
+                    } else {
+
+                        let prompt = "I am sorry, no meeting time options for all participants are available in the next few hours.";
+                        prompt += " Would you like to specify a time directly?";
+                        let reprompt = "When would you like to schedule the meeting for?";
+                        this.emit(':elicitSlot', 'startTime', prompt, reprompt);
+                    }
+
+                });
+
+            } else {
+                // should default to asking user what time they want to meet
+                this.emit(":delegate", updatedIntent);
+            }
+
+            awaitingResponseOnSuggestingMeetingTimes = false;
+
         } else if(addParticipant.value
             && invitingParticipant === false
             && doneWithParticipants === false) {
@@ -176,7 +225,11 @@ function delegateSlotCollection() {
 
             } else {
                 doneWithParticipants = true;
-                this.emit(":delegate", updatedIntent);
+                awaitingResponseOnSuggestingMeetingTimes = true;
+                let prompt = "Would you like to hear options for meeting times?";
+                let reprompt = "Would you like me to list options for meeting times?";
+                this.emit(':elicitSlot', 'suggestMeetingTime', prompt, reprompt);
+                //this.emit(":delegate", updatedIntent);
             }
 
         } else if(meetingRoomSlot.value && meetingRoomSlot.confirmationStatus === "NONE") {
@@ -293,6 +346,10 @@ const getEndDateTime = function (datetime, duration) {
     return moment(datetime).add(durationObj);
 };
 
+const prettifyDateTime = function (datetime) {
+    return moment(datetime).format("ddd, Hma");
+};
+
 const prettifyDuration = function (duration) {
 
     const days = duration.match(/\d+D/g);
@@ -358,3 +415,21 @@ const getDurationObject = function(durationString) {
 
     return obj;
 };
+
+function sayArray(myData, penultimateWord = 'and') {
+    // the first argument is an array [] of items
+    // the second argument is the list penultimate word; and/or/nor etc.  Default to 'and'
+    let result = '';
+
+    myData.forEach(function(element, index, arr) {
+
+        if (index === 0) {
+            result = element;
+        } else if (index === myData.length - 1) {
+            result += ` ${penultimateWord} ${element}`;
+        } else {
+            result += `, ${element}`;
+        }
+    });
+    return result;
+}
