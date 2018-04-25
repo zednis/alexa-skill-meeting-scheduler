@@ -98,6 +98,10 @@
                         {
                             "name": "addParticipant",
                             "type": "YES_NO"
+                        },
+                        {
+                            "name": "suggestMeetingTime",
+                            "type": "YES_NO"
                         }
                     ],
                     "samples": [
