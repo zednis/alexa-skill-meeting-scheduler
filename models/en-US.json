@@ -124,6 +124,62 @@
                         "book room {meetingRoom} at {startTime} on {meetingDay}",
                         "book room {meetingRoom} at {startTime}"
                     ]
+                },
+                {
+                    "name": "QuickBookMeeting",
+                    "slots": [
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "samples": [
+                                "{organizer}"
+                            ]
+                        },
+                        {
+                            "name": "participantTwo",
+                            "type": "USER"
+                        },
+                        {
+                            "name": "participantOne",
+                            "type": "USER"
+                        },
+                        {
+                            "name": "participantThree",
+                            "type": "USER"
+                        },
+                        {
+                            "name": "roomResource",
+                            "type": "MEETING_RESOURCE"
+                        },
+                        {
+                            "name": "meetingRoom",
+                            "type": "ROOM_NAME"
+                        },
+                        {
+                            "name": "meetingDay",
+                            "type": "AMAZON.DATE"
+                        },
+                        {
+                            "name": "meetingStartTime",
+                            "type": "AMAZON.TIME"
+                        },
+                        {
+                            "name": "prettyDuration",
+                            "type": "PRETTY_DURATION"
+                        },
+                        {
+                            "name": "meetingDuration",
+                            "type": "AMAZON.DURATION"
+                        }
+                    ],
+                    "samples": [
+                        "book a room the next time {organizer} and  {participantOne} are available.",
+                        "book a room with a {roomResource} the next time {organizer} {participantOne} {participantTwo} and {participantThree} are all available",
+                        "book a room with a {roomResource} the next time {organizer} {participantOne} and {participantTwo} are all available ",
+                        "book a room with a {roomResource} the next time {organizer} and {participantOne} are both available",
+                        "book a room the next time {organizer} {participantOne} {participantTwo} and {participantThree} are all available",
+                        "book a room the next time {organizer}  {participantOne} and {participantTwo} are all available"
+                    ]
                 }
             ],
             "types": [
@@ -533,6 +589,87 @@
                             "confirmationRequired": false,
                             "elicitationRequired": false,
                             "prompts": {}
+                        },
+                        {
+                            "name": "suggestMeetingTime",
+                            "type": "YES_NO",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "QuickBookMeeting",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.1363630111986"
+                    },
+                    "slots": [
+                        {
+                            "name": "organizer",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.731889016169.516005217087"
+                            }
+                        },
+                        {
+                            "name": "participantTwo",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "participantOne",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "participantThree",
+                            "type": "USER",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "roomResource",
+                            "type": "MEETING_RESOURCE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "meetingRoom",
+                            "type": "ROOM_NAME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "meetingDay",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "meetingStartTime",
+                            "type": "AMAZON.TIME",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "prettyDuration",
+                            "type": "PRETTY_DURATION",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
                         }
                     ]
                 }
@@ -669,6 +806,24 @@
                     {
                         "type": "PlainText",
                         "value": "Did you mean {meetingRoom}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.1363630111986",
+                "variations": [
+                    {
+                        "type": "SSML",
+                        "value": "<speak>I am ready to book a meeting in room {meetingRoom} on <say-as interpret-as=\"date\">{meetingDay}</say-as> at {meetingStartTime} for {prettyDuration} with {organizer} as organizer.  Is that OK</speak>"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.731889016169.516005217087",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Who would you like to set as organizer?"
                     }
                 ]
             }
