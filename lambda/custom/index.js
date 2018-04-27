@@ -197,6 +197,7 @@ function delegateSlotCollection() {
             const meetingDaySlot = updatedIntent.slots.meetingDay;
 
             const prettyDurationSlot = updatedIntent.slots.prettyDuration;
+            const roomResourceSlot = updatedIntent.slots.roomResource;
 
             // default to 1-hour meeting
             if (!updatedIntent.slots.meetingDuration.value) {
@@ -271,10 +272,18 @@ function delegateSlotCollection() {
                                                             // no more participants to check
                                                             // get meeting suggestions
 
+                                                            let msg = {
+                                                                participants: getParticipantEmails()
+                                                            };
+
+                                                            if(roomResourceSlot.value) {
+                                                                msg.resources = [roomResourceSlot.value];
+                                                            }
+
                                                             request.post({
                                                                 method: 'POST',
                                                                 uri: API_BASE + "/api/meetingSuggestion",
-                                                                body: {participants: getParticipantEmails()},
+                                                                body: msg,
                                                                 json: true
                                                             }, (error, response, body) => {
 
@@ -314,10 +323,18 @@ function delegateSlotCollection() {
 
                                                     // no other participants, get meeting suggestions
 
+                                                    let msg = {
+                                                        participants: getParticipantEmails()
+                                                    };
+
+                                                    if(roomResourceSlot.value) {
+                                                        msg.resources = [roomResourceSlot.value];
+                                                    }
+
                                                     request.post({
                                                         method: 'POST',
                                                         uri: API_BASE + "/api/meetingSuggestion",
-                                                        body: {participants: getParticipantEmails()},
+                                                        body: msg,
                                                         json: true
                                                     }, (error, response, body) => {
 
@@ -357,10 +374,18 @@ function delegateSlotCollection() {
 
                                         // no other participants, get meeting suggestions
 
+                                        let msg = {
+                                            participants: getParticipantEmails()
+                                        };
+
+                                        if(roomResourceSlot.value) {
+                                            msg.resources = [roomResourceSlot.value];
+                                        }
+
                                         request.post({
                                             method: 'POST',
                                             uri: API_BASE + "/api/meetingSuggestion",
-                                            body: {participants: getParticipantEmails()},
+                                            body: msg,
                                             json: true
                                         }, (error, response, body) => {
 
@@ -400,10 +425,18 @@ function delegateSlotCollection() {
 
                             // no other participants, get meeting suggestions
 
+                            let msg = {
+                                participants: getParticipantEmails()
+                            };
+
+                            if(roomResourceSlot.value) {
+                                msg.resources = [roomResourceSlot.value];
+                            }
+
                             request.post({
                                 method: 'POST',
                                 uri: API_BASE + "/api/meetingSuggestion",
-                                body: {participants: getParticipantEmails()},
+                                body: msg,
                                 json: true
                             }, (error, response, body) => {
 
