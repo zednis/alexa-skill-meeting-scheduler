@@ -10,7 +10,7 @@ Currently the skill supports two separate interactions - a basic dialog mode whi
 information fully describing a meeting and a 'quick book' mode where the skill will suggest a meeting time and
 room based on a request to create a meeting the next time a group of listed participants are all available.
 
-A more detailed description of the two Alexa skill interaction modes is available in the [User Guide](USER_GUIDE.md)
+A more detailed description of the two Alexa skill interaction modes is available in the [User Guide](USER-GUIDE.md)
 
 # Interaction model
 
