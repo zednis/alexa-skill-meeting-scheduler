@@ -10,9 +10,13 @@ In both modes the skill will ask for confirmation before scheduling the meeting.
 
 ## Book Meeting - Basic Dialog
 
-The Book Meeting Basic Dialog will prompt the user for meeting information, including name, organizer, participants,
+The Book Meeting Basic Dialog will prompt the user for meeting information including name, organizer, participants,
 room, and start datetime.  The user may optionally include a duration when they are providing the meeting start time,
-but if they do not a default meeting time of 1-hour will be used.
+but if they do not a default meeting time of 1-hour will be used.  After collecting sufficient information to describe
+the meeting Alexa will inform the user that she is ready to schedule the meeting and ask the user for confirmation
+to book the meeting as currently described.
+
+example:
 
 User: *Alexa, ask meeting scheduler to schedule a meeting*
 
