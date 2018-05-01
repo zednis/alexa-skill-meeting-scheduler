@@ -33,8 +33,8 @@ statement is used to determine what action to take.  When all required slots hav
 
 # Deploying
 
-This alexa skill may be deployed to AWS using the ASK CLI (link)
+This alexa skill may be deployed to AWS using the [ASK CLI](https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html)
 
-TODO instructions for installing, configuring the ASK CLI
+Instructions for installing, configuring the ASK CLI are available in the Alexa Skills [Quick Start](https://developer.amazon.com/docs/smapi/quick-start-alexa-skills-kit-command-line-interface.html#step-2-install-and-initialize-ask-cli)
 
 To deploy the current code to AWS run ``ask deploy``.
